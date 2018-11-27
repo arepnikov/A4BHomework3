@@ -2,7 +2,6 @@ package com.daftmobile.a4bhomework3
 
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -14,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         lateinit var EMAIL_RETRIEVER: EmailRetriever
-        private val CONTACT_PICKER = 101
+        private const val CONTACT_PICKER = 101
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             return
 
         when (requestCode) {
-            Companion.CONTACT_PICKER -> contactPickerResultHandler(data)
+            CONTACT_PICKER -> contactPickerResultHandler(data)
             else            -> showMsgDialog(this, getString(R.string.unexpected_request_code))
         }
     }
