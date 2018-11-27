@@ -2,4 +2,9 @@
     <string name="app_name">Mail sender</string>
     <string name="email_subject">Wiadomość z pracy domowej</string>
     <string name="send_email">Rozpocznij wysyłanie</string>
+    <string name="no_email_addr_error_msg">No Email Address Error</string>
+    <string name="pick_contact_error_msg">Pick Contact Error</string>
+    <string name="no_email_app_msg">No Email App Error</string>
+    <string name="mailto_scheme">mailto:</string>
+    <string name="unexpected_request_code">Unexpected request code</string>
 </resources>
