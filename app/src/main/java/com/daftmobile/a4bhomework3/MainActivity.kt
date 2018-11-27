@@ -35,12 +35,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun contactPickerResultHandler(data : Intent?) {
-        extractEmailAddr(data).let { email_address ->
-            if (email_address == null)
-                showMsgDialog(this, getString(R.string.no_email_addr_error_msg))
-            else
-                sendMailViaApp(arrayOf(email_address))
-        }
+        val email_address = extractEmailAddr(data)
+
+        if (email_address == null)
+            showMsgDialog(this, getString(R.string.no_email_addr_error_msg))
+        else
+            sendMailViaApp(arrayOf(email_address))
     }
 
     private fun createPickEmailAddrIntent() = Intent(Intent.ACTION_PICK).apply {
@@ -54,14 +54,18 @@ class MainActivity : AppCompatActivity() {
         putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject))
     }
 
-    private fun sendMail(view: View) = createPickEmailAddrIntent().let { pickAddrIntent ->
+    private fun sendMail(view: View) {
+        val pickAddrIntent = createPickEmailAddrIntent()
+
         if (pickAddrIntent.resolveActivity(packageManager) == null)
             showMsgDialog(this, getString(R.string.pick_contact_error_msg))
         else
-            startActivityForResult(pickAddrIntent, Companion.CONTACT_PICKER)
+            startActivityForResult(pickAddrIntent, CONTACT_PICKER)
     }
 
-    private fun sendMailViaApp(emails: Array<String>) = createEmailSendToIntent(emails).let { sendEmailIntent ->
+    private fun sendMailViaApp(emails: Array<String>) {
+        val sendEmailIntent = createEmailSendToIntent(emails)
+
         if (sendEmailIntent.resolveActivity(packageManager) == null)
             showMsgDialog(this, getString(R.string.no_email_app_msg))
         else
