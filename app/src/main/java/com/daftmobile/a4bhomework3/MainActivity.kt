@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             return
 
         when (requestCode) {
-            CONTACT_PICKER -> contactPickerResultHandler(data)
+            CONTACT_PICKER  -> contactPickerResultHandler(data)
             else            -> showMsgDialog(this, getString(R.string.unexpected_request_code))
         }
     }
