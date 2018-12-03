@@ -23,6 +23,19 @@ class MainActivity : AppCompatActivity() {
         sendMailButton.setOnClickListener(this::sendMail)
     }
 
+    private fun sendMail(view: View) {
+        val pickAddrIntent = createPickEmailAddrIntent()
+
+        if (pickAddrIntent.resolveActivity(packageManager) == null)
+            showMsgDialog(this, getString(R.string.pick_contact_error_msg))
+        else
+            startActivityForResult(pickAddrIntent, CONTACT_PICKER)
+    }
+
+    private fun createPickEmailAddrIntent() = Intent(Intent.ACTION_PICK).apply {
+        type = ContactsContract.CommonDataKinds.Email.CONTENT_TYPE
+    }
+
     // https://stackoverflow.com/questions/32954413/android-contact-picker-get-name-number-email
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode != Activity.RESULT_OK)
@@ -43,25 +56,7 @@ class MainActivity : AppCompatActivity() {
             sendMailViaApp(arrayOf(email_address))
     }
 
-    private fun createPickEmailAddrIntent() = Intent(Intent.ACTION_PICK).apply {
-        type = ContactsContract.CommonDataKinds.Email.CONTENT_TYPE
-    }
-
-    // https://developer.android.com/guide/components/intents-common#ComposeEmail
-    private fun createEmailSendToIntent(emails : Array<String>) = Intent(Intent.ACTION_SENDTO).apply {
-        data = Uri.parse(getString(R.string.mailto_scheme))
-        putExtra(Intent.EXTRA_EMAIL, emails)
-        putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject))
-    }
-
-    private fun sendMail(view: View) {
-        val pickAddrIntent = createPickEmailAddrIntent()
-
-        if (pickAddrIntent.resolveActivity(packageManager) == null)
-            showMsgDialog(this, getString(R.string.pick_contact_error_msg))
-        else
-            startActivityForResult(pickAddrIntent, CONTACT_PICKER)
-    }
+    private fun extractEmailAddr(data : Intent?)  = data?.data?.let { uri -> EMAIL_RETRIEVER.retrieve(uri) }
 
     private fun sendMailViaApp(emails: Array<String>) {
         val sendEmailIntent = createEmailSendToIntent(emails)
@@ -72,5 +67,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(sendEmailIntent)
     }
 
-    private fun extractEmailAddr(data : Intent?)  = data?.data?.let { uri -> EMAIL_RETRIEVER.retrieve(uri) }
+    // https://developer.android.com/guide/components/intents-common#ComposeEmail
+    private fun createEmailSendToIntent(emails : Array<String>) = Intent(Intent.ACTION_SENDTO).apply {
+        data = Uri.parse(getString(R.string.mailto_scheme))
+        putExtra(Intent.EXTRA_EMAIL, emails)
+        putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject))
+    }
 }
